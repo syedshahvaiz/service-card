@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Licensing a Training Centre — V5 Visual Dashboard</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: #f5f5f5; color: #333; font-size: 13px; padding-left: 200px; }
+
+  .top-line { height: 4px; background: #c8a000; }
+  .header { background: #fff; border-bottom: 1px solid #e8e8e8; padding: 14px 32px; display: flex; align-items: center; justify-content: space-between; }
+  .logo-img { width: 160px; height: auto; }
+  .search-box { display: flex; align-items: center; border: 1px solid #d0d0d0; border-radius: 4px; overflow: hidden; width: 260px; }
+  .search-box input { border: none; outline: none; padding: 8px 12px; font-size: 13px; color: #666; width: 100%; font-family: inherit; }
+  .search-box button { background: none; border: none; padding: 8px 10px; cursor: pointer; color: #999; display: flex; align-items: center; }
+  .search-box button:hover { color: #b8860b; }
+
+  .nav { background: #fff; border-bottom: 1px solid #e0e0e0; padding: 0 32px; display: flex; align-items: center; justify-content: space-between; }
+  .nav-links { display: flex; }
+  .nav-links a { text-decoration: none; color: #333; font-size: 13.5px; font-weight: 600; padding: 15px 13px; display: flex; align-items: center; gap: 5px; }
+  .nav-links a:hover { color: #b8860b; }
+  .nav-links .arrow { font-size: 9px; color: #aaa; }
+  .nav-icons { display: flex; align-items: center; gap: 18px; }
+  .nav-icons a { color: #b8860b; text-decoration: none; display: flex; align-items: center; }
+
+  .breadcrumb-row { padding: 16px 32px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #f0f0f0; }
+  .breadcrumb { font-size: 13px; display: flex; align-items: center; gap: 4px; }
+  .breadcrumb a { color: #b8860b; text-decoration: none; font-weight: 500; }
+  .breadcrumb .sep { color: #bbb; margin: 0 2px; }
+  .breadcrumb .current { color: #1a1a1a; font-weight: 700; }
+  .breadcrumb-actions a { color: #555; text-decoration: none; padding: 4px 12px; font-size: 17px; border-left: 1px solid #e0e0e0; display: inline-flex; align-items: center; }
+  .breadcrumb-actions a:first-child { border-left: none; }
+  .breadcrumb-actions a:hover { color: #b8860b; }
+
+  /* Fixed full-height sidebar */
+  .page-body { display: block; }
+  .version-sidebar { position: fixed; left: 0; top: 0; bottom: 0; width: 200px; height: 100vh; background: #fff; border-right: 1px solid #e8e8e8; overflow-y: auto; z-index: 200; display: flex; flex-direction: column; padding: 0; }
+  .vs-logo-strip { padding: 16px 16px 12px; border-bottom: 1px solid #f0f0f0; }
+  .vs-logo-strip img { width: 100%; height: auto; }
+  .vs-title { font-size: 10px; font-weight: 700; color: #aaa; text-transform: uppercase; letter-spacing: 0.7px; padding: 18px 16px 10px; }
+  .vs-item { display: flex; align-items: center; gap: 10px; padding: 11px 16px; text-decoration: none; color: #444; border-left: 3px solid transparent; transition: background .15s; }
+  .vs-item:hover { background: #faf8f3; }
+  .vs-item.active { border-left-color: #b8860b; background: #faf8f3; }
+  .vs-num { font-size: 11px; font-weight: 700; color: #777; flex-shrink: 0; min-width: 24px; }
+  .vs-item.active .vs-num { color: #b8860b; }
+  .vs-label { font-size: 13px; font-weight: 600; color: #333; }
+  .vs-item.active .vs-label { color: #b8860b; }
+  .vs-badge { font-size: 9px; font-weight: 700; background: #b8860b; color: #fff; border-radius: 3px; padding: 1px 5px; margin-left: 4px; text-transform: uppercase; letter-spacing: 0.3px; }
+
+  .main { padding: 24px 32px 60px; flex: 1; min-width: 0; }
+  .page-title { font-size: 28px; font-weight: 700; color: #1a1a1a; margin-bottom: 6px; }
+  .page-subtitle { font-size: 14px; color: #666; line-height: 1.6; margin-bottom: 24px; }
+
+  /* ── V5: VISUAL DASHBOARD ── */
+
+  /* Section card shell */
+  .dash-card { background: #fff; border: 1px solid #e8e8e8; border-radius: 8px; margin-bottom: 20px; overflow: hidden; }
+  .dash-card-header { padding: 14px 24px; border-bottom: 1px solid #f0f0f0; display: flex; align-items: center; justify-content: space-between; }
+  .dash-card-header h2 { font-size: 14px; font-weight: 700; color: #1a1a1a; text-transform: uppercase; letter-spacing: 0.4px; }
+  .dash-card-header .htag { font-size: 11px; color: #999; font-weight: 400; }
+
+  /* ── SECTION 1: SLA SPEEDOMETER STRIP ── */
+  .sla-strip { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1px; background: #f0f0f0; }
+  .sla-cell { background: #fff; padding: 18px 16px; text-align: center; }
+  .sla-service-name { font-size: 11.5px; font-weight: 700; color: #333; line-height: 1.35; margin-bottom: 12px; min-height: 32px; display: flex; align-items: center; justify-content: center; }
+  .sla-bar-wrap { height: 6px; background: #f0f0f0; border-radius: 3px; margin-bottom: 8px; }
+  .sla-bar { height: 6px; border-radius: 3px; background: #b8860b; }
+  .sla-val { font-size: 15px; font-weight: 800; color: #1a1a1a; }
+  .sla-unit { font-size: 10.5px; color: #999; margin-top: 2px; }
+
+  /* ── SECTION 2: FEE VISUAL ── */
+  .fee-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1px; background: #f0f0f0; }
+  .fee-cell { background: #fff; padding: 18px 16px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+  .fee-icon-wrap { width: 44px; height: 44px; border-radius: 50%; background: #fef9e7; display: flex; align-items: center; justify-content: center; }
+  .fee-amount { font-size: 16px; font-weight: 800; color: #b8860b; }
+  .fee-name { font-size: 11px; font-weight: 600; color: #555; text-align: center; line-height: 1.35; }
+  .fee-note { font-size: 10px; color: #999; }
+  .fee-na { font-size: 14px; font-weight: 700; color: #ccc; }
+
+  /* ── SECTION 3: STEP FLOWS ── */
+  .step-flows { padding: 20px 24px; display: flex; flex-direction: column; gap: 20px; }
+  .step-flow-row { display: flex; align-items: flex-start; gap: 16px; }
+  .flow-label { flex-shrink: 0; width: 160px; font-size: 12px; font-weight: 700; color: #555; line-height: 1.35; padding-top: 6px; }
+  .flow-steps { display: flex; align-items: center; flex-wrap: wrap; gap: 4px; flex: 1; }
+  .flow-step { display: flex; align-items: center; gap: 4px; }
+  .flow-step-box { background: #faf8f3; border: 1px solid #e8ddb8; border-radius: 4px; padding: 5px 10px; font-size: 11.5px; color: #555; white-space: nowrap; }
+  .flow-arrow { color: #c8a000; font-size: 12px; flex-shrink: 0; }
+
+  /* ── SECTION 4: DOCUMENT MATRIX ── */
+  .doc-matrix { overflow-x: auto; }
+  table.doc-tbl { width: 100%; border-collapse: collapse; min-width: 700px; }
+  table.doc-tbl thead th { padding: 10px 14px; font-size: 11px; font-weight: 700; background: #faf8f3; color: #b8860b; border-bottom: 2px solid #e8ddb8; border-right: 1px solid #f0f0f0; text-align: center; }
+  table.doc-tbl thead th:first-child { text-align: left; background: #fff; color: #aaa; text-transform: uppercase; letter-spacing: 0.4px; }
+  table.doc-tbl thead th:last-child { border-right: none; }
+  table.doc-tbl tbody tr td { padding: 9px 14px; border-bottom: 1px solid #f5f5f5; border-right: 1px solid #f5f5f5; font-size: 12.5px; }
+  table.doc-tbl tbody tr td:last-child { border-right: none; }
+  table.doc-tbl tbody tr:last-child td { border-bottom: none; }
+  table.doc-tbl tbody tr td:first-child { color: #444; }
+  table.doc-tbl tbody tr td:not(:first-child) { text-align: center; }
+  .tick { color: #b8860b; font-size: 15px; font-weight: 700; }
+  .na-dash { color: #ddd; font-size: 16px; }
+  .varies { font-size: 10px; color: #999; font-style: italic; }
+
+  /* Conditions + FAQ */
+  .conditions-list { list-style: none; padding: 0 24px 20px; }
+  .conditions-list li { display: flex; gap: 10px; font-size: 13px; color: #444; line-height: 1.6; padding: 10px 0; border-bottom: 1px solid #f5f5f5; }
+  .conditions-list li:last-child { border-bottom: none; }
+  .cond-num { font-weight: 700; color: #b8860b; flex-shrink: 0; min-width: 18px; }
+  .faq-body { padding: 8px 24px 20px; }
+  .faq-item { padding: 12px 0; border-bottom: 1px solid #f5f5f5; }
+  .faq-item:last-child { border-bottom: none; }
+  .faq-q { font-size: 13px; font-weight: 600; color: #333; margin-bottom: 5px; }
+  .faq-a { font-size: 13px; color: #666; line-height: 1.6; }
+  .faq-link-wrap { padding: 0 24px 20px; }
+  .faq-link { display: inline-block; padding: 8px 20px; border: 1px solid #ccc; border-radius: 6px; font-size: 13px; color: #333; text-decoration: none; }
+  .faq-link:hover { border-color: #b8860b; color: #b8860b; }
+  .last-updated { font-size: 11px; color: #bbb; margin-top: 8px; }
+
+  .footer { background: #f5f5f5; border-top: 3px solid #c8a000; margin-top: 40px; }
+  .footer-top { display: flex; gap: 32px; justify-content: space-between; padding: 44px 80px 36px; }
+  .footer-cols { display: flex; gap: 48px; flex: 1; }
+  .footer-col { display: flex; flex-direction: column; gap: 10px; min-width: 140px; }
+  .footer-heading { font-size: 14px; font-weight: 700; color: #b8860b; margin-bottom: 6px; }
+  .footer-col a { font-size: 13px; color: #444; text-decoration: none; line-height: 1.4; }
+  .footer-col a:hover { color: #b8860b; }
+  .footer-contact { display: flex; flex-direction: column; align-items: center; gap: 16px; min-width: 200px; }
+  .footer-contact-rows { display: flex; flex-direction: column; }
+  .footer-contact-item { display: flex; align-items: center; gap: 6px; }
+  .contact-num { font-size: 14px; font-weight: 700; color: #1a1a1a; }
+  .footer-bottom { background: #efefef; border-top: 1px solid #e0e0e0; padding: 16px 80px; display: flex; align-items: center; justify-content: space-between; font-size: 12.5px; color: #666; }
+  .social-links { display: flex; align-items: center; gap: 14px; }
+  .social-links span { margin-right: 4px; }
+  .social-links a { color: #555; text-decoration: none; display: flex; align-items: center; }
+  .social-links a:hover { color: #b8860b; }
+</style>
+</head>
+<body>
+
+<div class="top-line"></div>
+<div class="header">
+  <div><img src="mohesr-logo.svg" class="logo-img" alt="MOHESR Logo" /></div>
+  <div class="search-box"><input type="text" placeholder="Enter keywords to search" /><button><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></button></div>
+</div>
+
+<nav class="nav">
+  <div class="nav-links">
+    <a href="#"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Home</a>
+    <a href="#">Services <span class="arrow">&#9662;</span></a>
+    <a href="#">Open Data <span class="arrow">&#9662;</span></a>
+    <a href="#">Digital Participation <span class="arrow">&#9662;</span></a>
+    <a href="#">Legislation <span class="arrow">&#9662;</span></a>
+    <a href="#">About <span class="arrow">&#9662;</span></a>
+    <a href="#">More <span class="arrow">&#9662;</span></a>
+  </div>
+  <div class="nav-icons">
+    <a href="#"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></a>
+    <a href="#"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></a>
+    <a href="#"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></a>
+  </div>
+</nav>
+
+<div class="breadcrumb-row">
+  <div class="breadcrumb"><a href="#">Home</a><span class="sep">/</span><a href="#">Services</a><span class="sep">/</span><span class="current">Licensing a Training Centre</span></div>
+  <div class="breadcrumb-actions">
+    <a href="#"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg></a>
+    <a href="#"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></a>
+    <a href="#"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg></a>
+  </div>
+</div>
+
+<div class="page-body">
+<aside class="version-sidebar">
+  <div class="vs-logo-strip"><img src="mohesr-logo.svg" alt="MOHESR" /></div>
+  <div class="vs-title">Versions</div>
+  <a href="index.html" class="vs-item"><span class="vs-num">V1</span><span class="vs-label">V1 <span class="vs-badge">Recommended</span></span></a>
+  <a href="v2.html" class="vs-item"><span class="vs-num">V2</span><span class="vs-label">V2</span></a>
+  <a href="v3.html" class="vs-item"><span class="vs-num">V3</span><span class="vs-label">V3</span></a>
+  <a href="v4.html" class="vs-item"><span class="vs-num">V4</span><span class="vs-label">V4</span></a>
+  <a href="v5.html" class="vs-item active"><span class="vs-num">V5</span><span class="vs-label">V5</span></a>
+</aside>
+
+<div class="main">
+  <h1 class="page-title">Licensing a Training Centre</h1>
+  <p class="page-subtitle">A visual overview of all five application types — service times, fees, process flows, and required documents at a glance.</p>
+
+  <!-- SECTION 1: SERVICE TIMES -->
+  <div class="dash-card">
+    <div class="dash-card-header">
+      <h2>&#9201; Service Times</h2>
+      <span class="htag">Working days to completion</span>
+    </div>
+    <div class="sla-strip">
+      <!-- Max is 10 days, scale bars accordingly -->
+      <div class="sla-cell">
+        <div class="sla-service-name">License Training Center</div>
+        <div class="sla-bar-wrap"><div class="sla-bar" style="width:100%"></div></div>
+        <div class="sla-val">10</div>
+        <div class="sla-unit">working days</div>
+      </div>
+      <div class="sla-cell">
+        <div class="sla-service-name">Modify a Training Center License</div>
+        <div class="sla-bar-wrap"><div class="sla-bar" style="width:40%"></div></div>
+        <div class="sla-val">4</div>
+        <div class="sla-unit">working days</div>
+      </div>
+      <div class="sla-cell">
+        <div class="sla-service-name">Renew Training Center License</div>
+        <div class="sla-bar-wrap"><div class="sla-bar" style="width:40%"></div></div>
+        <div class="sla-val">4</div>
+        <div class="sla-unit">working days</div>
+      </div>
+      <div class="sla-cell">
+        <div class="sla-service-name">Cancel Training Center License</div>
+        <div class="sla-bar-wrap"><div class="sla-bar" style="width:20%"></div></div>
+        <div class="sla-val">2</div>
+        <div class="sla-unit">working days</div>
+      </div>
+      <div class="sla-cell">
+        <div class="sla-service-name">Approval for Announcement</div>
+        <div class="sla-bar-wrap"><div class="sla-bar" style="width:10%;background:#1e7e44"></div></div>
+        <div class="sla-val" style="color:#1e7e44">1</div>
+        <div class="sla-unit">working day</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 2: FEES -->
+  <div class="dash-card">
+    <div class="dash-card-header">
+      <h2>&#9737; Service Fees</h2>
+      <span class="htag">Cost per application</span>
+    </div>
+    <div class="fee-grid">
+      <div class="fee-cell">
+        <div class="fee-icon-wrap"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#b8860b" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></div>
+        <div class="fee-amount">5,000</div>
+        <div class="fee-note">AED</div>
+        <div class="fee-name">License Training Center</div>
+      </div>
+      <div class="fee-cell">
+        <div class="fee-icon-wrap"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#b8860b" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></div>
+        <div class="fee-amount">2,000</div>
+        <div class="fee-note">AED / modification</div>
+        <div class="fee-name">Modify a Training Center License</div>
+      </div>
+      <div class="fee-cell">
+        <div class="fee-icon-wrap"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#b8860b" stroke-width="2"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg></div>
+        <div class="fee-amount">5,000</div>
+        <div class="fee-note">AED</div>
+        <div class="fee-name">Renew Training Center License</div>
+      </div>
+      <div class="fee-cell">
+        <div class="fee-icon-wrap"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg></div>
+        <div class="fee-na">N/A</div>
+        <div class="fee-name" style="color:#bbb;">Cancel Training Center License</div>
+      </div>
+      <div class="fee-cell">
+        <div class="fee-icon-wrap"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#b8860b" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+        <div class="fee-amount">50</div>
+        <div class="fee-note">AED / advertisement</div>
+        <div class="fee-name">Approval for Announcement</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 3: PROCESS FLOWS -->
+  <div class="dash-card">
+    <div class="dash-card-header">
+      <h2>&#9654; Process Steps</h2>
+      <span class="htag">Application journey per service type</span>
+    </div>
+    <div class="step-flows">
+      <div class="step-flow-row">
+        <div class="flow-label">License Training Center</div>
+        <div class="flow-steps">
+          <div class="flow-step"><div class="flow-step-box">Start</div><span class="flow-arrow">›</span></div>
+          <div class="flow-step"><div class="flow-step-box">UAE Pass login</div><span class="flow-arrow">›</span></div>
+          <div class="flow-step"><div class="flow-step-box">Submit documents</div><span class="flow-arrow">›</span></div>
+          <div class="flow-step"><div class="flow-step-box">Ministry review</div><span class="flow-arrow">›</span></div>
+          <div class="flow-step"><div class="flow-step-box">Pay fee &amp; receive licence</div></div>
+        </div>
+      </div>
+      <div class="step-flow-row">
+        <div class="flow-label">Modify a Training Center License</div>
+        <div class="flow-steps">
+          <div class="flow-step"><div class="flow-step-box">Start</div><span class="flow-arrow">›</span></div>
+          <div class="flow-step"><div class="flow-step-box">UAE Pass login</div><span class="flow-arrow">›</span></div>
+          <div class="flow-step"><div class="flow-step-box">Specify amendment</div><span class="flow-arrow">›</span></div>
+          <div class="flow-step"><div class="flow-step-box">Submit documents</div><span class="flow-arrow">›</span></div>
+          <div class="flow-step"><div class="flow-step-box">Pay &amp; receive amended licence</div></div>
+        </div>
+      </div>
+      <div class="step-flow-row">
+        <div class="flow-label">Renew Training Center License</div>
+        <div class="flow-steps">
+          <div class="flow-step"><div class="flow-step-box">Start</div><span class="flow-arrow">›</span></div>
+          <div class="flow-step"><div class="flow-step-box">UAE Pass login</div><span class="flow-arrow">›</span></div>
+          <div class="flow-step"><div class="flow-step-box">Submit renewal request</div><span class="flow-arrow">›</span></div>
+          <div class="flow-step"><div class="flow-step-box">Ministry review</div><span class="flow-arrow">›</span></div>
+          <div class="flow-step"><div class="flow-step-box">Pay &amp; receive licence</div></div>
+        </div>
+      </div>
+      <div class="step-flow-row">
+        <div class="flow-label">Cancel Training Center License</div>
+        <div class="flow-steps">
+          <div class="flow-step"><div class="flow-step-box">Start</div><span class="flow-arrow">›</span></div>
+          <div class="flow-step"><div class="flow-step-box">UAE Pass login</div><span class="flow-arrow">›</span></div>
+          <div class="flow-step"><div class="flow-step-box">Submit cancellation request</div><span class="flow-arrow">›</span></div>
+          <div class="flow-step"><div class="flow-step-box">Ministry confirmation</div></div>
+        </div>
+      </div>
+      <div class="step-flow-row">
+        <div class="flow-label">Approval for Announcement</div>
+        <div class="flow-steps">
+          <div class="flow-step"><div class="flow-step-box">Start</div><span class="flow-arrow">›</span></div>
+          <div class="flow-step"><div class="flow-step-box">UAE Pass login</div><span class="flow-arrow">›</span></div>
+          <div class="flow-step"><div class="flow-step-box">Upload advertisement</div><span class="flow-arrow">›</span></div>
+          <div class="flow-step"><div class="flow-step-box">Pay &amp; receive approval</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 4: DOCUMENT MATRIX -->
+  <div class="dash-card">
+    <div class="dash-card-header">
+      <h2>&#9776; Required Documents</h2>
+      <span class="htag">Document applicability by service type</span>
+    </div>
+    <div class="doc-matrix">
+      <table class="doc-tbl">
+        <thead>
+          <tr>
+            <th>Document</th>
+            <th>License</th>
+            <th>Modify</th>
+            <th>Renew</th>
+            <th>Cancel</th>
+            <th>Announcement</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Commercial license of the Training Center</td><td><span class="tick">&#10003;</span></td><td><span class="na-dash">—</span></td><td><span class="na-dash">—</span></td><td><span class="na-dash">—</span></td><td><span class="na-dash">—</span></td></tr>
+          <tr><td>Authorized Representative Passport or ID</td><td><span class="tick">&#10003;</span></td><td><span class="na-dash">—</span></td><td><span class="na-dash">—</span></td><td><span class="na-dash">—</span></td><td><span class="na-dash">—</span></td></tr>
+          <tr><td>Authorized Representative Introductory Statement</td><td><span class="tick">&#10003;</span></td><td><span class="na-dash">—</span></td><td><span class="na-dash">—</span></td><td><span class="na-dash">—</span></td><td><span class="na-dash">—</span></td></tr>
+          <tr><td>Certificate of Reservation of a Trade Name</td><td><span class="tick">&#10003;</span></td><td><span class="tick">&#10003;</span></td><td><span class="na-dash">—</span></td><td><span class="na-dash">—</span></td><td><span class="na-dash">—</span></td></tr>
+          <tr><td>Appendix to the contract signed (Owner / License Holder)</td><td><span class="na-dash">—</span></td><td><span class="varies">varies</span></td><td><span class="na-dash">—</span></td><td><span class="na-dash">—</span></td><td><span class="na-dash">—</span></td></tr>
+          <tr><td>Trade License of the Owner / License Holder</td><td><span class="na-dash">—</span></td><td><span class="varies">varies</span></td><td><span class="na-dash">—</span></td><td><span class="na-dash">—</span></td><td><span class="na-dash">—</span></td></tr>
+          <tr><td>Passport or valid ID (Owner / License Holder)</td><td><span class="na-dash">—</span></td><td><span class="varies">varies</span></td><td><span class="na-dash">—</span></td><td><span class="na-dash">—</span></td><td><span class="na-dash">—</span></td></tr>
+          <tr><td>Introductory statement (Owner / License Holder)</td><td><span class="na-dash">—</span></td><td><span class="varies">varies</span></td><td><span class="na-dash">—</span></td><td><span class="na-dash">—</span></td><td><span class="na-dash">—</span></td></tr>
+          <tr><td>New Manager CV</td><td><span class="na-dash">—</span></td><td><span class="varies">varies</span></td><td><span class="na-dash">—</span></td><td><span class="na-dash">—</span></td><td><span class="na-dash">—</span></td></tr>
+          <tr><td>Certified academic qualification (New Manager)</td><td><span class="na-dash">—</span></td><td><span class="varies">varies</span></td><td><span class="na-dash">—</span></td><td><span class="na-dash">—</span></td><td><span class="na-dash">—</span></td></tr>
+          <tr><td>Passport or valid ID (New Manager)</td><td><span class="na-dash">—</span></td><td><span class="varies">varies</span></td><td><span class="na-dash">—</span></td><td><span class="na-dash">—</span></td><td><span class="na-dash">—</span></td></tr>
+          <tr><td>New Manager Photo</td><td><span class="na-dash">—</span></td><td><span class="varies">varies</span></td><td><span class="na-dash">—</span></td><td><span class="na-dash">—</span></td><td><span class="na-dash">—</span></td></tr>
+          <tr><td>Administration-Approved Advertisement</td><td><span class="na-dash">—</span></td><td><span class="na-dash">—</span></td><td><span class="na-dash">—</span></td><td><span class="na-dash">—</span></td><td><span class="tick">&#10003;</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Conditions -->
+  <div class="dash-card">
+    <div class="dash-card-header"><h2>Conditions <span class="htag" style="margin-left:6px;">— apply to all application types</span></h2></div>
+    <ul class="conditions-list">
+      <li><span class="cond-num">1</span>Obtaining pre-approval from the Ministry before renting the location of the training centre.</li>
+      <li><span class="cond-num">2</span>Submit all required documents as per the initial approval document before the initial approval expires.</li>
+      <li><span class="cond-num">3</span>Missing documents must be submitted within five (5) working days, otherwise the application will be closed automatically.</li>
+      <li><span class="cond-num">4</span>The training centre must continue to meet all Ministry standards throughout the licence period.</li>
+    </ul>
+  </div>
+
+  <!-- FAQ -->
+  <div class="dash-card">
+    <div class="dash-card-header"><h2>Frequently Asked Questions</h2></div>
+    <div class="faq-body">
+      <div class="faq-item">
+        <div class="faq-q">Which emirates does this service cover?</div>
+        <div class="faq-a">Ajman, Um Al Quwain, Ras Al Khaimah, and Fujairah.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Why does "varies" appear in the document matrix for Modify?</div>
+        <div class="faq-a">The documents required for a modification depend on the type of change being requested. The full set of possible documents is listed, but only those relevant to your specific amendment will be required.</div>
+      </div>
+    </div>
+    <div class="faq-link-wrap">
+      <p style="font-size:13px;color:#666;margin-bottom:12px;">Unable to find the information you need?</p>
+      <a href="#" class="faq-link">Visit our frequently asked questions section</a>
+    </div>
+  </div>
+
+  <div class="last-updated">Last updated: 26/12/2025 07:29 AM</div>
+</div><!-- /main -->
+</div><!-- /page-body -->
+
+<footer class="footer">
+  <div class="footer-top">
+    <div class="footer-cols">
+      <div class="footer-col"><div class="footer-heading">The Ministry</div><a href="#">About the ministry</a><a href="#">About the minister</a><a href="#">Customer happiness charter</a><a href="#">Procurement</a><a href="#">Careers</a></div>
+      <div class="footer-col"><div class="footer-heading">Using the website</div><a href="#">Sitemap</a><a href="#">Disclaimer</a><a href="#">Privacy policy</a><a href="#">Terms and conditions</a><a href="#">Accessibility</a><a href="#">Digital participation policy</a></div>
+      <div class="footer-col"><div class="footer-heading">Information and support</div><a href="#">Service catalogue</a><a href="#">Frequently asked questions</a><a href="#">Contact</a><a href="#">Digital participation</a></div>
+      <div class="footer-col"><div class="footer-heading">References</div><a href="#">Legislation</a><a href="#">Download center</a><a href="#">Abbreviations and glossary</a></div>
+    </div>
+    <div class="footer-contact">
+      <div><svg viewBox="0 0 90 70" width="90" height="70"><circle cx="35" cy="35" r="28" fill="none" stroke="#e0e0e0" stroke-width="5"/><circle cx="35" cy="35" r="28" fill="none" stroke="#ce1126" stroke-width="5" stroke-dasharray="30 146" stroke-dashoffset="-10" stroke-linecap="round"/><circle cx="35" cy="35" r="28" fill="none" stroke="#006847" stroke-width="5" stroke-dasharray="50 146" stroke-dashoffset="-40" stroke-linecap="round"/><circle cx="35" cy="35" r="28" fill="none" stroke="#1a1a1a" stroke-width="5" stroke-dasharray="60 146" stroke-dashoffset="-90" stroke-linecap="round"/><text x="35" y="40" text-anchor="middle" font-size="18" font-weight="800" fill="#1a1a1a">171</text><text x="62" y="40" font-size="8" fill="#1a1a1a" font-weight="700" letter-spacing="1">TAWASUL</text></svg></div>
+      <div class="footer-contact-rows">
+        <div class="footer-contact-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#006847" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.4 2 2 0 0 1 3.6 1.22h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.96a16 16 0 0 0 6.13 6.13l.96-.96a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg><span class="contact-num">171</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#25d366" stroke-width="2" style="margin-left:14px"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg><span class="contact-num">04-7771777</span></div>
+        <div class="footer-contact-item" style="margin-top:8px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.4 2 2 0 0 1 3.6 1.22h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.96a16 16 0 0 0 6.13 6.13l.96-.96a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg><span style="font-size:12px;color:#666;">Ministry toll free: <strong>800511</strong></span></div>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 Ministry of Higher Education and Scientific Research. All rights reserved. Last updated on 04/03/2026</span>
+    <div class="social-links"><span>Follow us on:</span>
+      <a href="#"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.737-8.844L1.254 2.25H8.08l4.259 5.631 5.905-5.631zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+      <a href="#"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+      <a href="#"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></a>
+      <a href="#"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 0 0 1.46 6.42 29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.41 19.6C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.95A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="#fff"/></svg></a>
+    </div>
+  </div>
+</footer>
+</body>
+</html>
