@@ -1,5 +1,7 @@
 {
-  "rewrites": [
-    { "source": "/", "destination": "/v1.html" }
+  "outputDirectory": ".",
+  "routes": [
+    { "src": "/", "dest": "/v1.html" },
+    { "src": "/(.*)", "dest": "/$1" }
   ]
 }
