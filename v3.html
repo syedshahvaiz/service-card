@@ -3,13 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Licensing a Training Centre — V3 Stacked Blocks</title>
+<title>Licensing a Training Centre — V2 Service Cards</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body { font-family: 'Segoe UI', Arial, sans-serif; background: #f5f5f5; color: #333; font-size: 13px; padding-left: 200px; }
 
   .top-line { height: 4px; background: #c8a000; }
   .header { background: #fff; border-bottom: 1px solid #e8e8e8; padding: 14px 32px; display: flex; align-items: center; justify-content: space-between; }
+  .header-left { display: flex; align-items: center; gap: 12px; }
   .logo-img { width: 160px; height: auto; }
   .search-box { display: flex; align-items: center; border: 1px solid #d0d0d0; border-radius: 4px; overflow: hidden; width: 260px; }
   .search-box input { border: none; outline: none; padding: 8px 12px; font-size: 13px; color: #666; width: 100%; font-family: inherit; }
@@ -23,17 +24,20 @@
   .nav-links .arrow { font-size: 9px; color: #aaa; }
   .nav-icons { display: flex; align-items: center; gap: 18px; }
   .nav-icons a { color: #b8860b; text-decoration: none; display: flex; align-items: center; }
+  .nav-icons a:hover { color: #8a6408; }
 
   .breadcrumb-row { padding: 16px 32px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #f0f0f0; }
-  .breadcrumb { font-size: 13px; display: flex; align-items: center; gap: 4px; }
+  .breadcrumb { font-size: 13px; color: #999; display: flex; align-items: center; gap: 4px; }
   .breadcrumb a { color: #b8860b; text-decoration: none; font-weight: 500; }
   .breadcrumb .sep { color: #bbb; margin: 0 2px; }
   .breadcrumb .current { color: #1a1a1a; font-weight: 700; }
-  .breadcrumb-actions a { color: #555; text-decoration: none; padding: 4px 12px; font-size: 17px; border-left: 1px solid #e0e0e0; display: inline-flex; align-items: center; }
+  .breadcrumb-actions { display: flex; align-items: center; }
+  .breadcrumb-actions a { color: #555; text-decoration: none; padding: 4px 12px; font-size: 17px; border-left: 1px solid #e0e0e0; display: flex; align-items: center; }
   .breadcrumb-actions a:first-child { border-left: none; }
   .breadcrumb-actions a:hover { color: #b8860b; }
 
   /* Fixed full-height sidebar */
+  body { padding-left: 200px; }
   .page-body { display: block; }
   .version-sidebar { position: fixed; left: 0; top: 0; bottom: 0; width: 200px; height: 100vh; background: #fff; border-right: 1px solid #e8e8e8; overflow-y: auto; z-index: 200; display: flex; flex-direction: column; padding: 0; }
   .vs-logo-strip { padding: 16px 16px 12px; border-bottom: 1px solid #f0f0f0; }
@@ -48,46 +52,50 @@
   .vs-item.active .vs-label { color: #b8860b; }
   .vs-badge { font-size: 9px; font-weight: 700; background: #b8860b; color: #fff; border-radius: 3px; padding: 1px 5px; margin-left: 4px; text-transform: uppercase; letter-spacing: 0.3px; }
 
+  /* Main */
   .main { padding: 24px 32px 60px; flex: 1; min-width: 0; }
   .page-title { font-size: 28px; font-weight: 700; color: #1a1a1a; margin-bottom: 6px; }
   .page-subtitle { font-size: 14px; color: #666; line-height: 1.6; margin-bottom: 28px; max-width: 760px; }
 
-  /* ── V3: STACKED BLOCKS ── */
-  .svc-block { background: #fff; border: 1px solid #e8e8e8; border-radius: 8px; margin-bottom: 16px; overflow: hidden; }
-  .svc-block-header { display: flex; align-items: stretch; border-bottom: 1px solid #f0f0f0; }
-  .svc-block-title-col { flex: 1; padding: 18px 24px; border-right: 1px solid #f0f0f0; display: flex; align-items: center; gap: 14px; }
-  .svc-index { width: 36px; height: 36px; border-radius: 50%; background: #b8860b; color: #fff; font-size: 16px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-  .svc-block-title-col h3 { font-size: 16px; font-weight: 700; color: #1a1a1a; }
-  .svc-meta-strip { display: flex; }
-  .svc-meta-pill { padding: 18px 28px; border-right: 1px solid #f0f0f0; text-align: center; }
-  .svc-meta-pill:last-child { border-right: none; }
-  .svc-meta-pill .label { font-size: 10px; font-weight: 700; color: #aaa; text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 5px; }
-  .svc-meta-pill .val { font-size: 15px; font-weight: 700; color: #1a1a1a; white-space: nowrap; }
-  .svc-meta-pill .val.gold { color: #b8860b; }
-  .svc-meta-pill .sub { font-size: 10.5px; color: #999; margin-top: 2px; }
+  /* ── V2: SERVICE CARDS GRID ── */
+  .cards-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-bottom: 24px; }
+  .cards-grid .card-wide { grid-column: span 1; }
 
-  .svc-block-body { display: grid; grid-template-columns: 1fr 1fr; gap: 0; }
-  .svc-block-col { padding: 20px 24px; border-right: 1px solid #f5f5f5; }
-  .svc-block-col:last-child { border-right: none; }
-  .col-label { font-size: 10px; font-weight: 700; color: #aaa; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; }
+  /* Make last 2 cards (row 2) centered — 2 cards on second row */
+  .cards-row2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; margin-bottom: 24px; max-width: calc(66.66% + 6px); }
 
-  .steps-ol { list-style: none; }
-  .steps-ol li { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 10px; font-size: 13px; color: #444; line-height: 1.45; }
-  .steps-ol li:last-child { margin-bottom: 0; }
-  .s-num { flex-shrink: 0; width: 22px; height: 22px; border-radius: 50%; border: 1.5px solid #ddd; display: flex; align-items: center; justify-content: center; font-size: 11px; color: #999; margin-top: 0px; }
+  .svc-card { background: #fff; border: 1px solid #e8e8e8; border-radius: 8px; overflow: hidden; display: flex; flex-direction: column; }
+  .svc-card-header { background: #b8860b; padding: 14px 18px; }
+  .svc-card-header h3 { font-size: 14px; font-weight: 700; color: #fff; line-height: 1.35; }
+  .svc-card-meta { display: flex; gap: 0; border-bottom: 1px solid #f0f0f0; }
+  .svc-meta-item { flex: 1; padding: 12px 16px; border-right: 1px solid #f0f0f0; }
+  .svc-meta-item:last-child { border-right: none; }
+  .svc-meta-label { font-size: 10px; font-weight: 700; color: #aaa; text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 4px; }
+  .svc-meta-val { font-size: 13.5px; font-weight: 700; color: #1a1a1a; }
+  .svc-meta-val.gold { color: #b8860b; }
+  .svc-meta-sub { font-size: 10.5px; color: #999; margin-top: 2px; }
 
-  .docs-ul { list-style: none; }
-  .docs-ul li { display: flex; gap: 8px; align-items: flex-start; margin-bottom: 8px; font-size: 13px; color: #444; line-height: 1.4; }
-  .docs-ul li:last-child { margin-bottom: 0; }
+  .svc-card-body { padding: 14px 18px; flex: 1; display: flex; flex-direction: column; gap: 14px; }
+
+  .svc-section-label { font-size: 10px; font-weight: 700; color: #aaa; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+  .steps-list { list-style: none; }
+  .steps-list li { display: flex; gap: 8px; align-items: flex-start; margin-bottom: 7px; font-size: 12.5px; color: #444; line-height: 1.4; }
+  .steps-list li:last-child { margin-bottom: 0; }
+  .step-dot { flex-shrink: 0; width: 20px; height: 20px; border-radius: 50%; border: 1.5px solid #d0d0d0; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #999; margin-top: 0px; }
+
+  .docs-list { list-style: none; }
+  .docs-list li { display: flex; gap: 7px; align-items: flex-start; margin-bottom: 6px; font-size: 12.5px; color: #444; line-height: 1.4; }
+  .docs-list li:last-child { margin-bottom: 0; }
   .doc-check { color: #b8860b; flex-shrink: 0; }
-  .na-note { font-size: 13px; color: #bbb; font-style: italic; }
-  .doc-note { font-size: 11px; color: #999; margin-top: 8px; font-style: italic; }
+  .na-text { font-size: 12.5px; color: #bbb; font-style: italic; }
+  .doc-note { font-size: 11px; color: #999; margin-top: 6px; font-style: italic; }
 
-  .svc-block-footer { border-top: 1px solid #f0f0f0; padding: 12px 24px; display: flex; justify-content: flex-end; }
-  .start-btn { padding: 8px 24px; background: #b8860b; color: #fff; border: none; border-radius: 5px; font-size: 13px; font-weight: 600; cursor: pointer; text-decoration: none; }
+  .svc-card-footer { padding: 12px 18px; border-top: 1px solid #f0f0f0; }
+  .start-btn { display: block; width: 100%; padding: 9px; background: #b8860b; color: #fff; border: none; border-radius: 5px; font-size: 13px; font-weight: 600; cursor: pointer; text-align: center; text-decoration: none; }
   .start-btn:hover { background: #9a7209; }
 
-  .section-card { background: #fff; border: 1px solid #e8e8e8; border-radius: 8px; margin-bottom: 16px; overflow: hidden; }
+  /* Conditions + FAQ shared */
+  .section-card { background: #fff; border: 1px solid #e8e8e8; border-radius: 8px; margin-bottom: 20px; overflow: hidden; }
   .section-header { padding: 14px 24px; border-bottom: 1px solid #f0f0f0; }
   .section-header h2 { font-size: 15px; font-weight: 700; color: #1a1a1a; }
   .section-header .section-tag { font-size: 11px; color: #999; font-weight: 400; margin-left: 4px; }
@@ -105,6 +113,7 @@
   .faq-link:hover { border-color: #b8860b; color: #b8860b; }
   .last-updated { font-size: 11px; color: #bbb; margin-top: 8px; }
 
+  /* Footer */
   .footer { background: #f5f5f5; border-top: 3px solid #c8a000; margin-top: 40px; }
   .footer-top { display: flex; gap: 32px; justify-content: space-between; padding: 44px 80px 36px; }
   .footer-cols { display: flex; gap: 48px; flex: 1; }
@@ -118,7 +127,7 @@
   .contact-num { font-size: 14px; font-weight: 700; color: #1a1a1a; }
   .footer-bottom { background: #efefef; border-top: 1px solid #e0e0e0; padding: 16px 80px; display: flex; align-items: center; justify-content: space-between; font-size: 12.5px; color: #666; }
   .social-links { display: flex; align-items: center; gap: 14px; }
-  .social-links span { margin-right: 4px; }
+  .social-links span { font-size: 12.5px; color: #666; margin-right: 4px; }
   .social-links a { color: #555; text-decoration: none; display: flex; align-items: center; }
   .social-links a:hover { color: #b8860b; }
 
@@ -179,13 +188,8 @@
   }
 
   @media (max-width: 768px) {
-    .svc-block-header { flex-direction: column; }
-    .svc-block-title-col { border-right: none; border-bottom: 1px solid #f0f0f0; width: 100%; }
-    .svc-meta-strip { width: 100%; }
-    .svc-block-body { grid-template-columns: 1fr; }
-    .svc-block-col { border-right: none; border-bottom: 1px solid #f5f5f5; }
-    .svc-block-col:last-child { border-bottom: none; }
-    .svc-block-footer { justify-content: flex-start; }
+    .cards-grid { grid-template-columns: 1fr; }
+    .cards-row2 { grid-template-columns: 1fr; max-width: 100%; }
   }
 
 </style>
@@ -195,7 +199,9 @@
 <div class="top-line"></div>
 
 <div class="header">
-  <div><img src="mohesr-logo.svg" class="logo-img" alt="MOHESR Logo" /></div>
+  <div class="header-left">
+    <img src="mohesr-logo.svg" class="logo-img" alt="MOHESR Logo" />
+  </div>
   <div class="search-box">
     <input type="text" placeholder="Enter keywords to search" />
     <button><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></button>
@@ -234,193 +240,159 @@
 
 <div class="page-body">
 <aside class="version-sidebar">
-  <div class="vs-logo-strip"><img src="mohesr-logo.svg" alt="MOHESR" /></div>
+    <div class="vs-logo-strip"><img src="mohesr-logo.svg" alt="MOHESR" /></div>
   <div class="vs-title">Versions</div>
-  <a href="index.html" class="vs-item"><span class="vs-num">V1</span><span class="vs-label">V1 <span class="vs-badge">Recommended</span></span></a>
+  <a href="v1.html" class="vs-item"><span class="vs-num">V1</span><span class="vs-label">V1 <span class="vs-badge">Recommended</span></span></a>
   <a href="v2.html" class="vs-item"><span class="vs-num">V2</span><span class="vs-label">V2</span></a>
   <a href="v3.html" class="vs-item active"><span class="vs-num">V3</span><span class="vs-label">V3</span></a>
   <a href="v4.html" class="vs-item"><span class="vs-num">V4</span><span class="vs-label">V4</span></a>
   <a href="v5.html" class="vs-item"><span class="vs-num">V5</span><span class="vs-label">V5</span></a>
+  <a href="v6.html" class="vs-item"><span class="vs-num">V6</span><span class="vs-label">V6</span></a>
 </aside>
 
 <div class="main">
   <h1 class="page-title">Licensing a Training Centre</h1>
-  <p class="page-subtitle">All application types are listed below in full. Each block contains the complete information for that sub-service — steps, fees, required documents, and how to start.</p>
+  <p class="page-subtitle">This service covers all applications related to the licensing of training centres. Each card below represents a separate application type — select the one that matches your situation.</p>
 
-  <!-- Block 1 -->
-  <div class="svc-block">
-    <div class="svc-block-header">
-      <div class="svc-block-title-col">
-        <div class="svc-index">1</div>
-        <h3>License Training Center</h3>
-      </div>
-      <div class="svc-meta-strip">
-        <div class="svc-meta-pill">
-          <div class="label">Service Time</div>
-          <div class="val">10 working days</div>
-        </div>
-        <div class="svc-meta-pill">
-          <div class="label">Fee</div>
-          <div class="val gold">5,000 AED</div>
-        </div>
-      </div>
-    </div>
-    <div class="svc-block-body">
-      <div class="svc-block-col">
-        <div class="col-label">About this service</div>
-        <p style="font-size:13px;color:#555;line-height:1.65;">Apply for a new licence to establish and operate a training centre in the approved emirates. The Ministry will verify that your centre meets all required standards before the licence is issued.</p>
-      </div>
-      <div class="svc-block-col">
-        <div class="col-label">Required Documents</div>
-        <ul class="docs-ul">
-          <li><span class="doc-check">&#10003;</span>Commercial license of the Training Center</li>
-          <li><span class="doc-check">&#10003;</span>Authorized Representative Passport or ID</li>
-          <li><span class="doc-check">&#10003;</span>Authorized Representative Introductory Statement</li>
-          <li><span class="doc-check">&#10003;</span>Certificate of Reservation of a Trade Name</li>
-        </ul>
-      </div>
-    </div>
-    <div class="svc-block-footer"><a href="#" class="start-btn">Start service</a></div>
-  </div>
+  <!-- ROW 1: 3 cards -->
+  <div class="cards-grid">
 
-  <!-- Block 2 -->
-  <div class="svc-block">
-    <div class="svc-block-header">
-      <div class="svc-block-title-col">
-        <div class="svc-index">2</div>
-        <h3>Modify a Training Center License</h3>
-      </div>
-      <div class="svc-meta-strip">
-        <div class="svc-meta-pill">
-          <div class="label">Service Time</div>
-          <div class="val">4 working days</div>
+    <!-- Card 1 -->
+    <div class="svc-card">
+      <div class="svc-card-header"><h3>License Training Center</h3><p style="font-size:11.5px;color:rgba(255,255,255,0.82);margin-top:6px;line-height:1.5;">Apply for a new licence to establish and operate a training centre in the approved emirates. The Ministry will verify that your centre meets all required standards before the licence is issued.</p></div>
+      <div class="svc-card-meta">
+        <div class="svc-meta-item">
+          <div class="svc-meta-label">Service Time</div>
+          <div class="svc-meta-val">10 <span style="font-size:11px;font-weight:400;color:#999;">working days</span></div>
         </div>
-        <div class="svc-meta-pill">
-          <div class="label">Fee</div>
-          <div class="val gold">2,000 AED</div>
-          <div class="sub">per modification</div>
+        <div class="svc-meta-item">
+          <div class="svc-meta-label">Fee</div>
+          <div class="svc-meta-val gold">5,000 AED</div>
         </div>
       </div>
-    </div>
-    <div class="svc-block-body">
-      <div class="svc-block-col">
-        <div class="col-label">About this service</div>
-        <p style="font-size:13px;color:#555;line-height:1.65;">Request changes to an existing training centre licence — such as updating ownership details, manager information, or trade name. Documents required vary depending on the type of modification.</p>
+      <div class="svc-card-body">
+        <div>
+          <div class="svc-section-label">Required Documents</div>
+          <ul class="docs-list">
+            <li><span class="doc-check">&#10003;</span>Commercial license of the Training Center</li>
+            <li><span class="doc-check">&#10003;</span>Authorized Representative Passport or ID</li>
+            <li><span class="doc-check">&#10003;</span>Authorized Representative Introductory Statement</li>
+            <li><span class="doc-check">&#10003;</span>Certificate of Reservation of a Trade Name</li>
+          </ul>
+        </div>
       </div>
-      <div class="svc-block-col">
-        <div class="col-label">Required Documents</div>
-        <ul class="docs-ul">
-          <li><span class="doc-check">&#10003;</span>Certificate of Reservation of a Trade Name</li>
-          <li><span class="doc-check">&#10003;</span>Appendix to the contract signed (Owner / License Holder)</li>
-          <li><span class="doc-check">&#10003;</span>Trade License of the Owner / License Holder</li>
-          <li><span class="doc-check">&#10003;</span>Passport or valid ID (Owner / License Holder)</li>
-          <li><span class="doc-check">&#10003;</span>Introductory statement (Owner / License Holder)</li>
-          <li><span class="doc-check">&#10003;</span>New Manager CV</li>
-          <li><span class="doc-check">&#10003;</span>Certified academic qualification (New Manager)</li>
-          <li><span class="doc-check">&#10003;</span>Passport or valid ID (New Manager)</li>
-          <li><span class="doc-check">&#10003;</span>New Manager Photo</li>
-        </ul>
-        <div class="doc-note">Documents vary depending on the type of amendment.</div>
-      </div>
+      <div class="svc-card-footer"><a href="#" class="start-btn">Start service</a></div>
     </div>
-    <div class="svc-block-footer"><a href="#" class="start-btn">Start service</a></div>
-  </div>
 
-  <!-- Block 3 -->
-  <div class="svc-block">
-    <div class="svc-block-header">
-      <div class="svc-block-title-col">
-        <div class="svc-index">3</div>
-        <h3>Renew Training Center License</h3>
-      </div>
-      <div class="svc-meta-strip">
-        <div class="svc-meta-pill">
-          <div class="label">Service Time</div>
-          <div class="val">4 working days</div>
+    <!-- Card 2 -->
+    <div class="svc-card">
+      <div class="svc-card-header"><h3>Modify a Training Center License</h3><p style="font-size:11.5px;color:rgba(255,255,255,0.82);margin-top:6px;line-height:1.5;">Request changes to an existing training centre licence — such as updating ownership details, manager information, or trade name. Documents required vary depending on the type of modification.</p></div>
+      <div class="svc-card-meta">
+        <div class="svc-meta-item">
+          <div class="svc-meta-label">Service Time</div>
+          <div class="svc-meta-val">4 <span style="font-size:11px;font-weight:400;color:#999;">working days</span></div>
         </div>
-        <div class="svc-meta-pill">
-          <div class="label">Fee</div>
-          <div class="val gold">5,000 AED</div>
+        <div class="svc-meta-item">
+          <div class="svc-meta-label">Fee</div>
+          <div class="svc-meta-val gold">2,000 AED</div>
+          <div class="svc-meta-sub">per modification</div>
         </div>
       </div>
-    </div>
-    <div class="svc-block-body">
-      <div class="svc-block-col">
-        <div class="col-label">About this service</div>
-        <p style="font-size:13px;color:#555;line-height:1.65;">Renew an expiring training centre licence to continue operations without interruption. No additional documents are required at the time of submission.</p>
+      <div class="svc-card-body">
+        <div>
+          <div class="svc-section-label">Required Documents</div>
+          <ul class="docs-list">
+            <li><span class="doc-check">&#10003;</span>Certificate of Reservation of a Trade Name</li>
+            <li><span class="doc-check">&#10003;</span>Appendix to the contract signed (Owner / License Holder)</li>
+            <li><span class="doc-check">&#10003;</span>Trade License of the Owner / License Holder</li>
+            <li><span class="doc-check">&#10003;</span>Passport or valid ID (Owner / License Holder)</li>
+            <li><span class="doc-check">&#10003;</span>Introductory statement (Owner / License Holder)</li>
+            <li><span class="doc-check">&#10003;</span>New Manager CV</li>
+            <li><span class="doc-check">&#10003;</span>Certified academic qualification (New Manager)</li>
+            <li><span class="doc-check">&#10003;</span>Passport or valid ID (New Manager)</li>
+            <li><span class="doc-check">&#10003;</span>New Manager Photo</li>
+          </ul>
+          <div class="doc-note">Documents vary depending on the type of amendment.</div>
+        </div>
       </div>
-      <div class="svc-block-col">
-        <div class="col-label">Required Documents</div>
-        <span class="na-note">No documents required for this service type.</span>
-      </div>
+      <div class="svc-card-footer"><a href="#" class="start-btn">Start service</a></div>
     </div>
-    <div class="svc-block-footer"><a href="#" class="start-btn">Start service</a></div>
-  </div>
 
-  <!-- Block 4 -->
-  <div class="svc-block">
-    <div class="svc-block-header">
-      <div class="svc-block-title-col">
-        <div class="svc-index">4</div>
-        <h3>Cancel Training Center License</h3>
-      </div>
-      <div class="svc-meta-strip">
-        <div class="svc-meta-pill">
-          <div class="label">Service Time</div>
-          <div class="val">2 working days</div>
+    <!-- Card 3 -->
+    <div class="svc-card">
+      <div class="svc-card-header"><h3>Renew Training Center License</h3><p style="font-size:11.5px;color:rgba(255,255,255,0.82);margin-top:6px;line-height:1.5;">Renew an expiring training centre licence to continue operations without interruption. No additional documents are required at the time of submission.</p></div>
+      <div class="svc-card-meta">
+        <div class="svc-meta-item">
+          <div class="svc-meta-label">Service Time</div>
+          <div class="svc-meta-val">4 <span style="font-size:11px;font-weight:400;color:#999;">working days</span></div>
         </div>
-        <div class="svc-meta-pill">
-          <div class="label">Fee</div>
-          <div class="val" style="color:#999;">N/A</div>
+        <div class="svc-meta-item">
+          <div class="svc-meta-label">Fee</div>
+          <div class="svc-meta-val gold">5,000 AED</div>
         </div>
       </div>
-    </div>
-    <div class="svc-block-body">
-      <div class="svc-block-col">
-        <div class="col-label">About this service</div>
-        <p style="font-size:13px;color:#555;line-height:1.65;">Submit a formal request to cancel an active training centre licence. No fee is charged for this application type.</p>
+      <div class="svc-card-body">
+        <div>
+          <div class="svc-section-label">Required Documents</div>
+          <span class="na-text">No documents required</span>
+        </div>
       </div>
-      <div class="svc-block-col">
-        <div class="col-label">Required Documents</div>
-        <span class="na-note">No documents required for this service type.</span>
-      </div>
+      <div class="svc-card-footer"><a href="#" class="start-btn">Start service</a></div>
     </div>
-    <div class="svc-block-footer"><a href="#" class="start-btn">Start service</a></div>
-  </div>
 
-  <!-- Block 5 -->
-  <div class="svc-block">
-    <div class="svc-block-header">
-      <div class="svc-block-title-col">
-        <div class="svc-index">5</div>
-        <h3>Approval for Announcement</h3>
-      </div>
-      <div class="svc-meta-strip">
-        <div class="svc-meta-pill">
-          <div class="label">Service Time</div>
-          <div class="val">1 working day</div>
+  </div><!-- /cards-grid row 1 -->
+
+  <!-- ROW 2: 2 cards centred -->
+  <div class="cards-row2">
+
+    <!-- Card 4 -->
+    <div class="svc-card">
+      <div class="svc-card-header"><h3>Cancel Training Center License</h3><p style="font-size:11.5px;color:rgba(255,255,255,0.82);margin-top:6px;line-height:1.5;">Submit a formal request to cancel an active training centre licence. No fee is charged for this application type.</p></div>
+      <div class="svc-card-meta">
+        <div class="svc-meta-item">
+          <div class="svc-meta-label">Service Time</div>
+          <div class="svc-meta-val">2 <span style="font-size:11px;font-weight:400;color:#999;">working days</span></div>
         </div>
-        <div class="svc-meta-pill">
-          <div class="label">Fee</div>
-          <div class="val gold">50 AED</div>
-          <div class="sub">per advertisement</div>
+        <div class="svc-meta-item">
+          <div class="svc-meta-label">Fee</div>
+          <div class="svc-meta-val" style="color:#999;">N/A</div>
         </div>
       </div>
-    </div>
-    <div class="svc-block-body">
-      <div class="svc-block-col">
-        <div class="col-label">About this service</div>
-        <p style="font-size:13px;color:#555;line-height:1.65;">Obtain Ministry approval before publishing any advertisement or promotional material related to your training centre. Each advertisement requires a separate application and fee.</p>
+      <div class="svc-card-body">
+        <div>
+          <div class="svc-section-label">Required Documents</div>
+          <span class="na-text">No documents required</span>
+        </div>
       </div>
-      <div class="svc-block-col">
-        <div class="col-label">Required Documents</div>
-        <ul class="docs-ul">
-          <li><span class="doc-check">&#10003;</span>Administration-Approved Advertisement</li>
-        </ul>
-      </div>
+      <div class="svc-card-footer"><a href="#" class="start-btn">Start service</a></div>
     </div>
-    <div class="svc-block-footer"><a href="#" class="start-btn">Start service</a></div>
-  </div>
+
+    <!-- Card 5 -->
+    <div class="svc-card">
+      <div class="svc-card-header"><h3>Approval for Announcement</h3><p style="font-size:11.5px;color:rgba(255,255,255,0.82);margin-top:6px;line-height:1.5;">Obtain Ministry approval before publishing any advertisement or promotional material related to your training centre. Each advertisement requires a separate application and fee.</p></div>
+      <div class="svc-card-meta">
+        <div class="svc-meta-item">
+          <div class="svc-meta-label">Service Time</div>
+          <div class="svc-meta-val">1 <span style="font-size:11px;font-weight:400;color:#999;">working day</span></div>
+        </div>
+        <div class="svc-meta-item">
+          <div class="svc-meta-label">Fee</div>
+          <div class="svc-meta-val gold">50 AED</div>
+          <div class="svc-meta-sub">per advertisement</div>
+        </div>
+      </div>
+      <div class="svc-card-body">
+        <div>
+          <div class="svc-section-label">Required Documents</div>
+          <ul class="docs-list">
+            <li><span class="doc-check">&#10003;</span>Administration-Approved Advertisement</li>
+          </ul>
+        </div>
+      </div>
+      <div class="svc-card-footer"><a href="#" class="start-btn">Start service</a></div>
+    </div>
+
+  </div><!-- /cards-row2 -->
 
 
   <!-- SHARED STEPS -->
@@ -460,7 +432,7 @@
       </div>
       <div class="faq-item">
         <div class="faq-q">Do documents for the Modify service vary by amendment type?</div>
-        <div class="faq-a">Yes. The list shown represents the full possible set. The specific documents required depend on the nature of the modification being requested.</div>
+        <div class="faq-a">Yes. The list shown represents the full possible set of documents. The specific documents required depend on the nature of the modification being requested.</div>
       </div>
     </div>
     <div class="faq-link-wrap">
@@ -478,28 +450,51 @@
   </div>
 
   <div class="last-updated">Last updated: 26/12/2025 07:29 AM</div>
-</div>
-</div>
+</div><!-- /main -->
+</div><!-- /page-body -->
 
 <footer class="footer">
   <div class="footer-top">
     <div class="footer-cols">
-      <div class="footer-col"><div class="footer-heading">The Ministry</div><a href="#">About the ministry</a><a href="#">About the minister</a><a href="#">Customer happiness charter</a><a href="#">Procurement</a><a href="#">Careers</a></div>
-      <div class="footer-col"><div class="footer-heading">Using the website</div><a href="#">Sitemap</a><a href="#">Disclaimer</a><a href="#">Privacy policy</a><a href="#">Terms and conditions</a><a href="#">Accessibility</a><a href="#">Digital participation policy</a></div>
-      <div class="footer-col"><div class="footer-heading">Information and support</div><a href="#">Service catalogue</a><a href="#">Frequently asked questions</a><a href="#">Contact</a><a href="#">Digital participation</a></div>
-      <div class="footer-col"><div class="footer-heading">References</div><a href="#">Legislation</a><a href="#">Download center</a><a href="#">Abbreviations and glossary</a></div>
+      <div class="footer-col">
+        <div class="footer-heading">The Ministry</div>
+        <a href="#">About the ministry</a><a href="#">About the minister</a><a href="#">Customer happiness charter</a><a href="#">Procurement</a><a href="#">Careers</a>
+      </div>
+      <div class="footer-col">
+        <div class="footer-heading">Using the website</div>
+        <a href="#">Sitemap</a><a href="#">Disclaimer</a><a href="#">Privacy policy</a><a href="#">Terms and conditions</a><a href="#">Accessibility</a><a href="#">Digital participation policy</a>
+      </div>
+      <div class="footer-col">
+        <div class="footer-heading">Information and support</div>
+        <a href="#">Service catalogue</a><a href="#">Frequently asked questions</a><a href="#">Contact</a><a href="#">Digital participation</a>
+      </div>
+      <div class="footer-col">
+        <div class="footer-heading">References</div>
+        <a href="#">Legislation</a><a href="#">Download center</a><a href="#">Abbreviations and glossary</a>
+      </div>
     </div>
     <div class="footer-contact">
-      <div><svg viewBox="0 0 90 70" width="90" height="70"><circle cx="35" cy="35" r="28" fill="none" stroke="#e0e0e0" stroke-width="5"/><circle cx="35" cy="35" r="28" fill="none" stroke="#ce1126" stroke-width="5" stroke-dasharray="30 146" stroke-dashoffset="-10" stroke-linecap="round"/><circle cx="35" cy="35" r="28" fill="none" stroke="#006847" stroke-width="5" stroke-dasharray="50 146" stroke-dashoffset="-40" stroke-linecap="round"/><circle cx="35" cy="35" r="28" fill="none" stroke="#1a1a1a" stroke-width="5" stroke-dasharray="60 146" stroke-dashoffset="-90" stroke-linecap="round"/><text x="35" y="40" text-anchor="middle" font-size="18" font-weight="800" fill="#1a1a1a">171</text><text x="62" y="40" font-size="8" fill="#1a1a1a" font-weight="700" letter-spacing="1">TAWASUL</text></svg></div>
+      <div>
+        <svg viewBox="0 0 90 70" width="90" height="70"><circle cx="35" cy="35" r="28" fill="none" stroke="#e0e0e0" stroke-width="5"/><circle cx="35" cy="35" r="28" fill="none" stroke="#ce1126" stroke-width="5" stroke-dasharray="30 146" stroke-dashoffset="-10" stroke-linecap="round"/><circle cx="35" cy="35" r="28" fill="none" stroke="#006847" stroke-width="5" stroke-dasharray="50 146" stroke-dashoffset="-40" stroke-linecap="round"/><circle cx="35" cy="35" r="28" fill="none" stroke="#1a1a1a" stroke-width="5" stroke-dasharray="60 146" stroke-dashoffset="-90" stroke-linecap="round"/><text x="35" y="40" text-anchor="middle" font-size="18" font-weight="800" fill="#1a1a1a">171</text><text x="62" y="40" font-size="8" fill="#1a1a1a" font-weight="700" letter-spacing="1">TAWASUL</text></svg>
+      </div>
       <div class="footer-contact-rows">
-        <div class="footer-contact-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#006847" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.4 2 2 0 0 1 3.6 1.22h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.96a16 16 0 0 0 6.13 6.13l.96-.96a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg><span class="contact-num">171</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#25d366" stroke-width="2" style="margin-left:14px"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg><span class="contact-num">04-7771777</span></div>
-        <div class="footer-contact-item" style="margin-top:8px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.4 2 2 0 0 1 3.6 1.22h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.96a16 16 0 0 0 6.13 6.13l.96-.96a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg><span style="font-size:12px;color:#666;">Ministry toll free: <strong>800511</strong></span></div>
+        <div class="footer-contact-item">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#006847" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.4 2 2 0 0 1 3.6 1.22h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.96a16 16 0 0 0 6.13 6.13l.96-.96a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          <span class="contact-num">171</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#25d366" stroke-width="2" style="margin-left:14px"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+          <span class="contact-num">04-7771777</span>
+        </div>
+        <div class="footer-contact-item" style="margin-top:8px;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.4 2 2 0 0 1 3.6 1.22h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.96a16 16 0 0 0 6.13 6.13l.96-.96a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          <span style="font-size:12px;color:#666;">Ministry toll free: <strong>800511</strong></span>
+        </div>
       </div>
     </div>
   </div>
   <div class="footer-bottom">
     <span>© 2026 Ministry of Higher Education and Scientific Research. All rights reserved. Last updated on 04/03/2026</span>
-    <div class="social-links"><span>Follow us on:</span>
+    <div class="social-links">
+      <span>Follow us on:</span>
       <a href="#"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.737-8.844L1.254 2.25H8.08l4.259 5.631 5.905-5.631zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
       <a href="#"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
       <a href="#"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></a>

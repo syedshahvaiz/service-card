@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Licensing a Training Centre — V1 Interactive</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: #f5f5f5; color: #333; font-size: 13px; padding-left: 200px; }
+
+  /* Gold top line */
+  .top-line { height: 4px; background: #c8a000; }
+
+  /* Header */
+  .header { background: #fff; border-bottom: 1px solid #e8e8e8; padding: 14px 32px; display: flex; align-items: center; justify-content: space-between; }
+  .logo-img { width: 160px; height: auto; }
+  .search-box { display: flex; align-items: center; border: 1px solid #d0d0d0; border-radius: 4px; overflow: hidden; width: 260px; }
+  .search-box input { border: none; outline: none; padding: 8px 12px; font-size: 13px; color: #666; width: 100%; font-family: inherit; }
+  .search-box button { background: none; border: none; padding: 8px 10px; cursor: pointer; color: #999; display: flex; align-items: center; }
+  .search-box button:hover { color: #b8860b; }
+
+  /* Nav */
+  .nav { background: #fff; border-bottom: 1px solid #e0e0e0; padding: 0 32px; display: flex; align-items: center; justify-content: space-between; }
+  .nav-links { display: flex; }
+  .nav-links a { text-decoration: none; color: #333; font-size: 13.5px; font-weight: 600; padding: 15px 13px; display: flex; align-items: center; gap: 5px; }
+  .nav-links a:hover { color: #b8860b; }
+  .nav-links .arrow { font-size: 9px; color: #aaa; }
+  .nav-icons { display: flex; align-items: center; gap: 18px; }
+  .nav-icons a { color: #b8860b; text-decoration: none; display: flex; align-items: center; }
+  .nav-icons a:hover { color: #8a6408; }
+
+  /* Breadcrumb */
+  .breadcrumb-row { padding: 16px 32px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #f0f0f0; }
+  .breadcrumb { font-size: 13px; color: #999; display: flex; align-items: center; gap: 4px; }
+  .breadcrumb a { color: #b8860b; text-decoration: none; font-weight: 500; }
+  .breadcrumb .sep { color: #bbb; margin: 0 2px; }
+  .breadcrumb .current { color: #1a1a1a; font-weight: 700; }
+  .breadcrumb-actions a { color: #555; text-decoration: none; padding: 4px 12px; font-size: 17px; border-left: 1px solid #e0e0e0; display: inline-flex; align-items: center; }
+  .breadcrumb-actions a:first-child { border-left: none; }
+  .breadcrumb-actions a:hover { color: #b8860b; }
+
+  /* Version sidebar */
+  .version-sidebar { position: fixed; left: 0; top: 0; bottom: 0; width: 200px; height: 100vh; background: #fff; border-right: 1px solid #e8e8e8; overflow-y: auto; z-index: 200; display: flex; flex-direction: column; padding: 0; }
+  .vs-logo-strip { padding: 16px 16px 12px; border-bottom: 1px solid #f0f0f0; }
+  .vs-logo-strip img { width: 100%; height: auto; }
+  .vs-title { font-size: 10px; font-weight: 700; color: #aaa; text-transform: uppercase; letter-spacing: 0.7px; padding: 18px 16px 10px; }
+  .vs-item { display: flex; align-items: center; gap: 10px; padding: 11px 16px; text-decoration: none; color: #444; border-left: 3px solid transparent; transition: background .15s; }
+  .vs-item:hover { background: #faf8f3; }
+  .vs-item.active { border-left-color: #b8860b; background: #faf8f3; }
+  .vs-num { font-size: 11px; font-weight: 700; color: #777; flex-shrink: 0; min-width: 24px; }
+  .vs-item.active .vs-num { color: #b8860b; }
+  .vs-label { font-size: 13px; font-weight: 600; color: #333; }
+  .vs-item.active .vs-label { color: #b8860b; }
+  .vs-badge { font-size: 9px; font-weight: 700; background: #b8860b; color: #fff; border-radius: 3px; padding: 1px 5px; margin-left: 4px; text-transform: uppercase; letter-spacing: 0.3px; }
+
+  /* Main */
+  .main { padding: 24px 32px 60px; }
+
+  /* ── SERVICE HEADER CARD ── */
+  .svc-header-card {
+    background: #fff;
+    border: 1px solid #e8e8e8;
+    border-radius: 8px;
+    padding: 22px 28px 20px;
+    margin-bottom: 14px;
+  }
+  .svc-category { font-size: 10.5px; font-weight: 700; color: #b8860b; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+  .svc-title { font-size: 26px; font-weight: 700; color: #1a1a1a; margin-bottom: 8px; }
+  .svc-subtitle { font-size: 13.5px; color: #666; line-height: 1.6; }
+
+  /* ── STATS BAR ── */
+  .stats-bar {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    background: #fff;
+    border: 1px solid #e8e8e8;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    overflow: hidden;
+  }
+  .stat-cell {
+    padding: 16px 20px;
+    border-right: 1px solid #f0f0f0;
+  }
+  .stat-cell:last-child { border-right: none; }
+  .stat-cell-label { font-size: 10px; font-weight: 700; color: #aaa; text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 6px; }
+  .stat-cell-val { font-size: 16px; font-weight: 700; color: #1a1a1a; }
+  .stat-cell-val.gold { color: #b8860b; }
+
+  /* ── APPLICATION TYPE SELECTOR ── */
+  .selector-section { margin-bottom: 20px; }
+  .selector-label { font-size: 10px; font-weight: 700; color: #aaa; text-transform: uppercase; letter-spacing: 0.7px; margin-bottom: 12px; }
+  .app-type-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
+  .app-type-card {
+    background: #fff;
+    border: 1.5px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 14px 16px;
+    cursor: pointer;
+    transition: border-color .15s, background .15s;
+    user-select: none;
+  }
+  .app-type-card:hover { border-color: #c8a000; background: #fdfcf7; }
+  .app-type-card.active {
+    border-color: #b8860b;
+    background: #faf8f0;
+    box-shadow: 0 0 0 1px #b8860b;
+  }
+  .app-type-name { font-size: 13px; font-weight: 700; color: #1a1a1a; margin-bottom: 5px; line-height: 1.3; }
+  .app-type-sla { font-size: 11.5px; color: #666; margin-bottom: 3px; }
+  .app-type-fee { font-size: 12px; font-weight: 700; color: #b8860b; }
+  .app-type-fee.no-fee { color: #999; font-weight: 400; }
+
+  /* ── DYNAMIC PANEL ── */
+  .dynamic-panel { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 20px; }
+  .panel-card {
+    background: #faf8f3;
+    border: 1px solid #e8ddb8;
+    border-radius: 8px;
+    padding: 18px 20px;
+  }
+  .panel-card-header { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; }
+  .panel-card-icon { color: #b8860b; font-size: 15px; }
+  .panel-card-title { font-size: 10.5px; font-weight: 700; color: #b8860b; text-transform: uppercase; letter-spacing: 0.6px; }
+
+  /* Docs list */
+  .panel-docs { list-style: none; }
+  .panel-docs li { display: flex; align-items: flex-start; gap: 8px; font-size: 12.5px; color: #444; line-height: 1.5; margin-bottom: 8px; }
+  .panel-docs li:last-child { margin-bottom: 0; }
+  .panel-check { color: #b8860b; flex-shrink: 0; margin-top: 1px; }
+  .panel-na { font-size: 12.5px; color: #bbb; font-style: italic; }
+  .doc-note { font-size: 11px; color: #999; font-style: italic; margin-top: 8px; }
+
+  /* Conditions list */
+  .panel-conds { list-style: none; }
+  .panel-conds li { display: flex; gap: 10px; font-size: 12.5px; color: #444; line-height: 1.55; margin-bottom: 10px; }
+  .panel-conds li:last-child { margin-bottom: 0; }
+  .panel-cond-num { font-weight: 700; color: #b8860b; flex-shrink: 0; min-width: 16px; }
+
+  /* Who can apply */
+  .panel-who { font-size: 12.5px; color: #444; line-height: 1.65; }
+
+  /* ── SHARED STEPS FLOW ── */
+  .steps-section { background: #fff; border: 1px solid #e8e8e8; border-radius: 8px; padding: 20px 28px 24px; margin-bottom: 20px; }
+  .steps-section-label { font-size: 10px; font-weight: 700; color: #aaa; text-transform: uppercase; letter-spacing: 0.7px; margin-bottom: 20px; }
+  .steps-flow { display: flex; align-items: flex-start; justify-content: space-between; position: relative; }
+  .steps-flow::before {
+    content: '';
+    position: absolute;
+    top: 18px;
+    left: 18px;
+    right: 18px;
+    height: 1.5px;
+    background: #e8ddb8;
+    z-index: 0;
+  }
+  .step-node { display: flex; flex-direction: column; align-items: center; gap: 10px; flex: 1; position: relative; z-index: 1; }
+  .step-circle {
+    width: 36px; height: 36px; border-radius: 50%;
+    border: 2px solid #b8860b;
+    background: #fff;
+    color: #b8860b;
+    font-size: 13px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .step-label { font-size: 11.5px; color: #555; text-align: center; line-height: 1.4; max-width: 80px; }
+
+  /* ── BOTTOM ACTION BAR ── */
+  .action-bar { display: flex; gap: 12px; align-items: center; margin-bottom: 12px; }
+  .btn-start {
+    flex: 1;
+    background: #b8860b;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 14px 28px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    text-align: center;
+    font-family: inherit;
+    transition: background .2s;
+  }
+  .btn-start:hover { background: #9a7209; }
+  .btn-secondary {
+    background: #fff;
+    border: 1.5px solid #d0d0d0;
+    color: #333;
+    border-radius: 6px;
+    padding: 13px 22px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    white-space: nowrap;
+    transition: border-color .2s;
+  }
+  .btn-secondary:hover { border-color: #b8860b; color: #b8860b; }
+
+  .last-updated { font-size: 11px; color: #bbb; margin-top: 8px; }
+
+  /* ── FOOTER ── */
+  .footer { background: #f5f5f5; border-top: 3px solid #c8a000; margin-top: 40px; }
+  .footer-top { display: flex; gap: 32px; justify-content: space-between; padding: 44px 80px 36px; }
+  .footer-cols { display: flex; gap: 48px; flex: 1; }
+  .footer-col { display: flex; flex-direction: column; gap: 10px; min-width: 140px; }
+  .footer-heading { font-size: 14px; font-weight: 700; color: #b8860b; margin-bottom: 6px; }
+  .footer-col a { font-size: 13px; color: #444; text-decoration: none; line-height: 1.4; }
+  .footer-col a:hover { color: #b8860b; }
+  .footer-contact { display: flex; flex-direction: column; align-items: center; gap: 16px; min-width: 200px; }
+  .footer-contact-rows { display: flex; flex-direction: column; }
+  .footer-contact-item { display: flex; align-items: center; gap: 6px; }
+  .contact-num { font-size: 14px; font-weight: 700; color: #1a1a1a; }
+  .footer-bottom { background: #efefef; border-top: 1px solid #e0e0e0; padding: 16px 80px; display: flex; align-items: center; justify-content: space-between; font-size: 12.5px; color: #666; }
+  .social-links { display: flex; align-items: center; gap: 14px; }
+  .social-links span { margin-right: 4px; }
+  .social-links a { color: #555; text-decoration: none; display: flex; align-items: center; }
+  .social-links a:hover { color: #b8860b; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    body { padding-left: 0; padding-top: 52px; }
+    .version-sidebar { position: fixed; left: 0; top: 0; bottom: auto; width: 100%; height: 52px; flex-direction: row; align-items: center; border-right: none; border-bottom: 1px solid #e8e8e8; overflow-x: auto; overflow-y: hidden; padding: 0; z-index: 300; }
+    .vs-logo-strip { display: none; }
+    .vs-title { display: none; }
+    .vs-item { flex-direction: row; padding: 0 14px; border-left: none; border-bottom: 3px solid transparent; height: 52px; white-space: nowrap; flex-shrink: 0; }
+    .vs-item.active { border-bottom-color: #b8860b; border-left: none; }
+    .vs-num { display: none; }
+    .vs-badge { display: none; }
+    .header { padding: 10px 16px; }
+    .logo-img { width: 110px; }
+    .search-box { width: 150px; }
+    .nav { padding: 0 12px; overflow-x: auto; }
+    .nav-links a { padding: 12px 10px; font-size: 12px; }
+    .nav-icons { display: none; }
+    .breadcrumb-row { padding: 10px 16px; }
+    .breadcrumb-actions { display: none; }
+    .main { padding: 16px 12px 40px; }
+    .svc-title { font-size: 20px; }
+    .stats-bar { grid-template-columns: repeat(2, 1fr); }
+    .stat-cell:nth-child(2) { border-right: none; }
+    .stat-cell:nth-child(1), .stat-cell:nth-child(2) { border-bottom: 1px solid #f0f0f0; }
+    .app-type-grid { grid-template-columns: 1fr 1fr; }
+    .dynamic-panel { grid-template-columns: 1fr; }
+    .steps-flow { flex-wrap: wrap; gap: 20px; }
+    .steps-flow::before { display: none; }
+    .step-node { flex: none; width: calc(33% - 14px); }
+    .action-bar { flex-wrap: wrap; }
+    .footer-top { flex-direction: column; padding: 28px 20px; gap: 24px; }
+    .footer-cols { flex-direction: column; gap: 20px; }
+    .footer-bottom { flex-direction: column; gap: 12px; padding: 16px 20px; text-align: center; }
+    .social-links { justify-content: center; }
+  }
+</style>
+</head>
+<body>
+
+<div class="top-line"></div>
+
+<!-- Header -->
+<div class="header">
+  <div><img src="mohesr-logo.svg" class="logo-img" alt="MOHESR Logo" /></div>
+  <div class="search-box">
+    <input type="text" placeholder="Enter keywords to search" />
+    <button><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></button>
+  </div>
+</div>
+
+<!-- Nav -->
+<nav class="nav">
+  <div class="nav-links">
+    <a href="#"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Home</a>
+    <a href="#">Services <span class="arrow">&#9662;</span></a>
+    <a href="#">Open Data <span class="arrow">&#9662;</span></a>
+    <a href="#">Digital Participation <span class="arrow">&#9662;</span></a>
+    <a href="#">Legislation <span class="arrow">&#9662;</span></a>
+    <a href="#">About <span class="arrow">&#9662;</span></a>
+    <a href="#">More <span class="arrow">&#9662;</span></a>
+  </div>
+  <div class="nav-icons">
+    <a href="#"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></a>
+    <a href="#"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></a>
+    <a href="#"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></a>
+  </div>
+</nav>
+
+<!-- Breadcrumb -->
+<div class="breadcrumb-row">
+  <div class="breadcrumb">
+    <a href="#">Home</a><span class="sep">/</span>
+    <a href="#">Services</a><span class="sep">/</span>
+    <span class="current">Licensing a Training Centre</span>
+  </div>
+  <div class="breadcrumb-actions">
+    <a href="#"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg></a>
+    <a href="#"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></a>
+    <a href="#"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg></a>
+  </div>
+</div>
+
+<!-- Version Sidebar -->
+<aside class="version-sidebar">
+  <div class="vs-logo-strip"><img src="mohesr-logo.svg" alt="MOHESR" /></div>
+  <div class="vs-title">Versions</div>
+  <a href="v1.html" class="vs-item active"><span class="vs-num">V1</span><span class="vs-label">V1 <span class="vs-badge">Recommended</span></span></a>
+  <a href="v2.html" class="vs-item"><span class="vs-num">V2</span><span class="vs-label">V2</span></a>
+  <a href="v3.html" class="vs-item"><span class="vs-num">V3</span><span class="vs-label">V3</span></a>
+  <a href="v4.html" class="vs-item"><span class="vs-num">V4</span><span class="vs-label">V4</span></a>
+  <a href="v5.html" class="vs-item"><span class="vs-num">V5</span><span class="vs-label">V5</span></a>
+  <a href="v6.html" class="vs-item"><span class="vs-num">V6</span><span class="vs-label">V6</span></a>
+</aside>
+
+<!-- Main -->
+<div class="main">
+
+  <!-- Service Header -->
+  <div class="svc-header-card">
+    <div class="svc-category">Training Centres &middot; G9</div>
+    <div class="svc-title">Licensing a Training Centre</div>
+    <div class="svc-subtitle">Covers all licensing actions for training centres operating in Ajman, Um Al Quwain, Ras Al Khaimah, and Fujairah. Select your application type below — required documents and conditions update accordingly.</div>
+  </div>
+
+  <!-- Stats Bar -->
+  <div class="stats-bar">
+    <div class="stat-cell">
+      <div class="stat-cell-label">Service Time</div>
+      <div class="stat-cell-val">1 – 10 working days</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-cell-label">Fees</div>
+      <div class="stat-cell-val gold">N/A – 5,000 AED</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-cell-label">Application Types</div>
+      <div class="stat-cell-val">5 journeys</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-cell-label">Channels</div>
+      <div class="stat-cell-val">App &middot; Website</div>
+    </div>
+  </div>
+
+  <!-- Application Type Selector -->
+  <div class="selector-section">
+    <div class="selector-label">Select your application type</div>
+    <div class="app-type-grid">
+      <div class="app-type-card active" onclick="selectType(this, 'license')">
+        <div class="app-type-name">License Training Center</div>
+        <div class="app-type-sla">10 working days</div>
+        <div class="app-type-fee">5,000 AED</div>
+      </div>
+      <div class="app-type-card" onclick="selectType(this, 'modify')">
+        <div class="app-type-name">Modify a Training Center License</div>
+        <div class="app-type-sla">4 working days</div>
+        <div class="app-type-fee">2,000 AED / modification</div>
+      </div>
+      <div class="app-type-card" onclick="selectType(this, 'renew')">
+        <div class="app-type-name">Renew Training Center License</div>
+        <div class="app-type-sla">4 working days</div>
+        <div class="app-type-fee">5,000 AED</div>
+      </div>
+      <div class="app-type-card" onclick="selectType(this, 'cancel')">
+        <div class="app-type-name">Cancel Training Center License</div>
+        <div class="app-type-sla">2 working days</div>
+        <div class="app-type-fee no-fee">No fee</div>
+      </div>
+      <div class="app-type-card" onclick="selectType(this, 'announcement')">
+        <div class="app-type-name">Approval for Announcement</div>
+        <div class="app-type-sla">1 working day</div>
+        <div class="app-type-fee">50 AED / advertisement</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dynamic Panel -->
+  <div class="dynamic-panel">
+    <!-- Required Documents -->
+    <div class="panel-card">
+      <div class="panel-card-header">
+        <span class="panel-card-icon">&#9783;</span>
+        <span class="panel-card-title">Required Documents</span>
+      </div>
+      <ul class="panel-docs" id="panel-docs">
+        <li><span class="panel-check">&#10003;</span>Commercial license of the Training Center</li>
+        <li><span class="panel-check">&#10003;</span>Authorized Representative Passport or ID</li>
+        <li><span class="panel-check">&#10003;</span>Authorized Representative Introductory Statement</li>
+        <li><span class="panel-check">&#10003;</span>Certificate of Reservation of a Trade Name</li>
+      </ul>
+    </div>
+
+    <!-- Conditions -->
+    <div class="panel-card">
+      <div class="panel-card-header">
+        <span class="panel-card-icon">&#9432;</span>
+        <span class="panel-card-title">Conditions</span>
+      </div>
+      <ul class="panel-conds" id="panel-conds">
+        <li><span class="panel-cond-num">1</span>Submit all required documents before initial approval expires.</li>
+        <li><span class="panel-cond-num">2</span>Missing documents must be submitted within 5 working days or the application is auto-closed.</li>
+        <li><span class="panel-cond-num">3</span>Centre must meet all Ministry standards throughout the licence period.</li>
+      </ul>
+    </div>
+
+    <!-- Who Can Apply -->
+    <div class="panel-card">
+      <div class="panel-card-header">
+        <span class="panel-card-icon">&#9750;</span>
+        <span class="panel-card-title">Who Can Apply</span>
+      </div>
+      <p class="panel-who" id="panel-who">Training centre owners and authorized representatives applying to establish a new centre in the approved emirates (Ajman, Um Al Quwain, Ras Al Khaimah, Fujairah).</p>
+    </div>
+  </div>
+
+  <!-- Shared Steps -->
+  <div class="steps-section">
+    <div class="steps-section-label">Shared Steps &mdash; All Application Types</div>
+    <div class="steps-flow">
+      <div class="step-node">
+        <div class="step-circle">1</div>
+        <div class="step-label">Start &amp; sign in via UAE Pass</div>
+      </div>
+      <div class="step-node">
+        <div class="step-circle">2</div>
+        <div class="step-label">Select application type</div>
+      </div>
+      <div class="step-node">
+        <div class="step-circle">3</div>
+        <div class="step-label">Upload required documents</div>
+      </div>
+      <div class="step-node">
+        <div class="step-circle">4</div>
+        <div class="step-label">Ministry reviews &amp; sends payment link</div>
+      </div>
+      <div class="step-node">
+        <div class="step-circle">5</div>
+        <div class="step-label">Complete payment</div>
+      </div>
+      <div class="step-node">
+        <div class="step-circle">6</div>
+        <div class="step-label">Receive licence / confirmation</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Action Bar -->
+  <div class="action-bar">
+    <button class="btn-start" id="btn-start">Start &mdash; License Training Center</button>
+    <button class="btn-secondary">Download service guide</button>
+    <button class="btn-secondary">FAQs</button>
+  </div>
+
+  <div class="last-updated">Last updated: 26/12/2025 07:29 AM</div>
+</div>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="footer-top">
+    <div class="footer-cols">
+      <div class="footer-col">
+        <div class="footer-heading">The Ministry</div>
+        <a href="#">About the ministry</a><a href="#">About the minister</a><a href="#">Customer happiness charter</a><a href="#">Procurement</a><a href="#">Careers</a>
+      </div>
+      <div class="footer-col">
+        <div class="footer-heading">Using the website</div>
+        <a href="#">Sitemap</a><a href="#">Disclaimer</a><a href="#">Privacy policy</a><a href="#">Terms and conditions</a><a href="#">Accessibility</a><a href="#">Digital participation policy</a>
+      </div>
+      <div class="footer-col">
+        <div class="footer-heading">Information and support</div>
+        <a href="#">Service catalogue</a><a href="#">Frequently asked questions</a><a href="#">Contact</a><a href="#">Digital participation</a>
+      </div>
+      <div class="footer-col">
+        <div class="footer-heading">References</div>
+        <a href="#">Legislation</a><a href="#">Download center</a><a href="#">Abbreviations and glossary</a>
+      </div>
+    </div>
+    <div class="footer-contact">
+      <div><svg viewBox="0 0 90 70" width="90" height="70"><circle cx="35" cy="35" r="28" fill="none" stroke="#e0e0e0" stroke-width="5"/><circle cx="35" cy="35" r="28" fill="none" stroke="#ce1126" stroke-width="5" stroke-dasharray="30 146" stroke-dashoffset="-10" stroke-linecap="round"/><circle cx="35" cy="35" r="28" fill="none" stroke="#006847" stroke-width="5" stroke-dasharray="50 146" stroke-dashoffset="-40" stroke-linecap="round"/><circle cx="35" cy="35" r="28" fill="none" stroke="#1a1a1a" stroke-width="5" stroke-dasharray="60 146" stroke-dashoffset="-90" stroke-linecap="round"/><text x="35" y="40" text-anchor="middle" font-size="18" font-weight="800" fill="#1a1a1a">171</text><text x="62" y="40" font-size="8" fill="#1a1a1a" font-weight="700" letter-spacing="1">TAWASUL</text></svg></div>
+      <div class="footer-contact-rows">
+        <div class="footer-contact-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#006847" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.4 2 2 0 0 1 3.6 1.22h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.96a16 16 0 0 0 6.13 6.13l.96-.96a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg><span class="contact-num">171</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#25d366" stroke-width="2" style="margin-left:14px"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg><span class="contact-num">04-7771777</span></div>
+        <div class="footer-contact-item" style="margin-top:8px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.4 2 2 0 0 1 3.6 1.22h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.96a16 16 0 0 0 6.13 6.13l.96-.96a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg><span style="font-size:12px;color:#666;">Ministry toll free: <strong>800511</strong></span></div>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 Ministry of Higher Education and Scientific Research. All rights reserved. Last updated on 04/03/2026</span>
+    <div class="social-links"><span>Follow us on:</span>
+      <a href="#"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.737-8.844L1.254 2.25H8.08l4.259 5.631 5.905-5.631zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+      <a href="#"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+      <a href="#"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></a>
+      <a href="#"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 0 0 1.46 6.42 29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.41 19.6C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.95A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="#fff"/></svg></a>
+    </div>
+  </div>
+</footer>
+
+<script>
+const data = {
+  license: {
+    name: 'License Training Center',
+    docs: [
+      'Commercial license of the Training Center',
+      'Authorized Representative Passport or ID',
+      'Authorized Representative Introductory Statement',
+      'Certificate of Reservation of a Trade Name',
+    ],
+    docsNote: null,
+    conds: [
+      'Submit all required documents before initial approval expires.',
+      'Missing documents must be submitted within 5 working days or the application is auto-closed.',
+      'Centre must meet all Ministry standards throughout the licence period.',
+    ],
+    who: 'Training centre owners and authorized representatives applying to establish a new centre in the approved emirates (Ajman, Um Al Quwain, Ras Al Khaimah, Fujairah).',
+  },
+  modify: {
+    name: 'Modify a Training Center License',
+    docs: [
+      'Certificate of Reservation of a Trade Name',
+      'Appendix to the contract signed (Owner / License Holder)',
+      'Trade License of the Owner / License Holder',
+      'Passport or valid ID (Owner / License Holder)',
+      'Introductory statement (Owner / License Holder)',
+      'New Manager CV',
+      'Certified academic qualification recognized by the Ministry (New Manager)',
+      'Passport or valid ID (New Manager)',
+      'New Manager Photo',
+    ],
+    docsNote: 'Documents required vary depending on the type of amendment.',
+    conds: [
+      'Submit all required documents before initial approval expires.',
+      'Missing documents must be submitted within 5 working days or the application is auto-closed.',
+      'Centre must meet all Ministry standards throughout the licence period.',
+    ],
+    who: 'Existing licensed training centre owners or authorized representatives seeking to amend licence details such as ownership, manager, or trade name.',
+  },
+  renew: {
+    name: 'Renew Training Center License',
+    docs: null,
+    docsNote: null,
+    conds: [
+      'Submit all required documents before initial approval expires.',
+      'Missing documents must be submitted within 5 working days or the application is auto-closed.',
+      'Centre must meet all Ministry standards throughout the licence period.',
+    ],
+    who: 'Owners or authorized representatives of an existing licensed training centre whose licence is due for renewal.',
+  },
+  cancel: {
+    name: 'Cancel Training Center License',
+    docs: null,
+    docsNote: null,
+    conds: [
+      'Submit all required documents before initial approval expires.',
+      'Missing documents must be submitted within 5 working days or the application is auto-closed.',
+    ],
+    who: 'Owners or authorized representatives of a licensed training centre wishing to permanently cancel their licence.',
+  },
+  announcement: {
+    name: 'Approval for Announcement',
+    docs: [
+      'Administration-Approved Advertisement',
+    ],
+    docsNote: null,
+    conds: [
+      'Each advertisement requires a separate application and fee.',
+      'Advertisements must be submitted for Ministry review before publication.',
+    ],
+    who: 'Training centre operators wishing to publish advertisements or promotional material related to their training programmes.',
+  },
+};
+
+function selectType(card, type) {
+  // Update card active state
+  document.querySelectorAll('.app-type-card').forEach(c => c.classList.remove('active'));
+  card.classList.add('active');
+
+  const d = data[type];
+
+  // Update docs
+  const docsEl = document.getElementById('panel-docs');
+  if (d.docs) {
+    docsEl.innerHTML = d.docs.map(doc =>
+      `<li><span class="panel-check">&#10003;</span>${doc}</li>`
+    ).join('');
+    if (d.docsNote) {
+      docsEl.innerHTML += `<li style="display:block;padding-top:6px;"><span class="doc-note">${d.docsNote}</span></li>`;
+    }
+  } else {
+    docsEl.innerHTML = '<li><span class="panel-na">No documents required for this application type.</span></li>';
+  }
+
+  // Update conditions
+  const condsEl = document.getElementById('panel-conds');
+  condsEl.innerHTML = d.conds.map((c, i) =>
+    `<li><span class="panel-cond-num">${i + 1}</span>${c}</li>`
+  ).join('');
+
+  // Update who can apply
+  document.getElementById('panel-who').textContent = d.who;
+
+  // Update CTA button
+  document.getElementById('btn-start').textContent = `Start \u2014 ${d.name}`;
+}
+</script>
+</body>
+</html>
