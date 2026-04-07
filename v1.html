@@ -386,6 +386,12 @@
     </div>
   </div>
 
+  <!-- Service Description Block -->
+  <div id="panel-desc-wrap" style="background:#fff;border:1px solid #e8e8e8;border-radius:8px;padding:18px 24px;margin-bottom:14px;">
+    <div style="font-size:10px;font-weight:700;color:#b8860b;text-transform:uppercase;letter-spacing:0.7px;margin-bottom:8px;">About this application type</div>
+    <p id="panel-desc" style="font-size:13.5px;color:#555;line-height:1.7;margin:0;">Apply for a new licence to establish and operate a training centre in the approved emirates. The Ministry will verify that your centre meets all required standards before the licence is issued.</p>
+  </div>
+
   <!-- Dynamic Panel -->
   <div class="dynamic-panel">
     <!-- Required Documents -->
@@ -566,6 +572,7 @@
 const data = {
   license: {
     name: 'License Training Center',
+    desc: 'Apply for a new licence to establish and operate a training centre in the approved emirates. The Ministry will verify that your centre meets all required standards before the licence is issued.',
     docs: [
       'Commercial license of the Training Center',
       'Authorized Representative Passport or ID',
@@ -582,6 +589,7 @@ const data = {
   },
   modify: {
     name: 'Modify a Training Center License',
+    desc: 'Request changes to an existing training centre licence — such as updating ownership details, manager information, or trade name. Documents required vary depending on the type of modification.',
     docs: [
       'Certificate of Reservation of a Trade Name',
       'Appendix to the contract signed (Owner / License Holder)',
@@ -603,6 +611,7 @@ const data = {
   },
   renew: {
     name: 'Renew Training Center License',
+    desc: 'Renew an expiring training centre licence to continue operations without interruption. No additional documents are required at the time of submission.',
     docs: null,
     docsNote: null,
     conds: [
@@ -614,6 +623,7 @@ const data = {
   },
   cancel: {
     name: 'Cancel Training Center License',
+    desc: 'Submit a formal request to cancel an active training centre licence. No fee is charged for this application type.',
     docs: null,
     docsNote: null,
     conds: [
@@ -624,6 +634,7 @@ const data = {
   },
   announcement: {
     name: 'Approval for Announcement',
+    desc: 'Obtain Ministry approval before publishing any advertisement or promotional material related to your training centre. Each advertisement requires a separate application and fee.',
     docs: [
       'Administration-Approved Advertisement',
     ],
@@ -661,6 +672,9 @@ function selectType(card, type) {
   condsEl.innerHTML = d.conds.map((c, i) =>
     `<li><span class="panel-cond-num">${i + 1}</span>${c}</li>`
   ).join('');
+
+  // Update description
+  document.getElementById('panel-desc').textContent = d.desc;
 
   // Update who can apply
   document.getElementById('panel-who').textContent = d.who;
